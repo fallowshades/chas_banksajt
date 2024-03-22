@@ -137,11 +137,13 @@ fetch('http://localhost:3001/users', {
 scp -i <din-nyckel>.pem -r ./ ubuntu@<din-ec2-instans>:/home/ubuntu/bank
 ```
 
-2. Installera Node.js om det inte redan är installerat.
+2. logga in på din instans med ssh.
 
-Navigera till din backend-mapp och starta din server med node server.js.
+3. Installera Node.js om det inte redan är installerat.
 
-3. Navigera till din frontend-mapp. Kör följande:
+4. Navigera till din backend-mapp och starta din server med node server.js.
+
+5. Navigera till din frontend-mapp. Kör följande:
 
 ```
 npm install
