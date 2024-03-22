@@ -43,7 +43,7 @@ Ett fält för användarnamn och ett för lösenord och en logga in knapp. När 
 **Kontosida**
 Här kan man se sitt saldo och sätta in pengar på kontot. För att göra detta behöver man skicka med sitt engångslösenord till backend.
 
-### Hur du klarar uppgiften
+## Hur du klarar uppgiften
 
 1. Öppna en terminal och gå med `cd` där du vill skapa projektet.
 2. Skapa där en folder: bank och gå med `cd` in i foldern.
