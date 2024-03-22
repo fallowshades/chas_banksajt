@@ -8,15 +8,24 @@ I bankens backend finns tre arrayer: En array `users` för användare, en array 
 
 **Users**
 Varje användare har ett id, ett användarnamn och ett lösenord.
-`[{id: 101, username: "Joe", password: "hemligt" }, ...]`
+
+```
+[{id: 101, username: "Joe", password: "hemligt" }, ...]
+```
 
 **Accounts**
 Varje bankkonto har ett id, ett användarid och ett saldo.
-`[{id: 1, userId: 101, amount: 200 }, ...]`
+
+```
+[{id: 1, userId: 101, amount: 200 }, ...]
+```
 
 **Sessions**
 När en användare loggar in skapas ett engångslösenord. Engångslösenordet och användarid läggs i sessions arrayen.
-`[{userId: 101, token: "nwuefweufh" }, ...]`
+
+```
+[{userId: 101, token: "nwuefweufh" }, ...]
+```
 
 ### Sidor på sajten
 
@@ -29,7 +38,7 @@ Ska innehålla navigering med länkar till Hem, logga in och skapa användare oc
 Ett fält för användarnamn och ett för lösenord. Datat ska sparas i arrayen users i backend och ett bankkonto skapas i backend med 0 kr som saldo.
 
 **Logga in**
-Ett fält för användarnamn och ett för lösenord och en logga in knapp. När man klickat på knappen ska man få tillbaka sitt engångslösenord i response.
+Ett fält för användarnamn och ett för lösenord och en logga in knapp. När man klickat på knappen ska man få tillbaka sitt engångslösenord i response och skickas till kontosidan med useRouter.
 
 **Kontosida**
 Här kan man se sitt saldo och sätta in pengar på kontot. För att göra detta behöver man skicka med sitt engångslösenord till backend.
