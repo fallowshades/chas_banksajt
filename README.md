@@ -79,9 +79,9 @@ Här kan man se sitt saldo och sätta in pengar på kontot. För att göra detta
 ### Startkod för server.js i backend
 
 ```
-const express = require('express');
+import express from 'express';
 import bodyParser from 'body-parser';
-const cors = require('cors');
+import cors from 'cors';
 
 const app = express();
 
