@@ -60,7 +60,7 @@ Här kan man se sitt saldo och sätta in pengar på kontot. För att göra detta
 1. Skriv `npm init` och tryck Enter på alla frågor.
 1. Lägg till `"type": "module"`i package.json
 1. I scripts i package.json lägg till: `"start": "nodemon server.js"`
-1. Installera dependencies: `npm i express body-parser`
+1. Installera dependencies: `npm i express cors body-parser`
 1. Börja skriva kod i `server.js`
 
 ### Endpoints och arrayer
@@ -76,7 +76,7 @@ Här kan man se sitt saldo och sätta in pengar på kontot. För att göra detta
 3. När man loggar in ska ett engångslösenord skapas och skickas tillbaka i response.
 4. När man hämtar saldot ska samma engångslösenord skickas med i Post.
 
-### Startkod för backend
+### Startkod för server.js i backend
 
 ```
 const express = require('express');
@@ -106,12 +106,6 @@ app.listen(port, () => {
     console.log(`Bankens backend körs på http://localhost:${port}`);
 });
 
-```
-
-**installera dependencys**
-
-```
-npm install express cors body-parser
 ```
 
 ### Exempel på fetch för POST i frontend
