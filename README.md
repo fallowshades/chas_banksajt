@@ -279,3 +279,188 @@ app.post('/me/accounts/transactions', (req, res) => {
     return res.status(401).send('Ogiltig session')
   }
 ```
+
+## front end navigering
+
+### basic chatGPT navigering
+
+```sh
+npx create-next-app@latest frontend
+```
+
+[route-groups]https://nextjs.org/docs/app/building-your-application/routing/route-groups
+
+skapa sidor i dashboard
+
+app
+-(dashboard)
+--accounts
+--auth
+---signup
+---login
+--profile
+
+app\page.js
+
+```js
+'use client'
+import Link from 'next/link'
+function LandingPage() {
+  return (
+    <div>
+      <nav className='flex gap-2'>
+        <Link href='/'>Hem</Link>
+        <Link href='/auth/login'>Logga in</Link>
+        <Link href='/auth/signup'>Skapa användare</Link>
+      </nav>
+      <section className='hero-section'>
+        <h1>Välkommen till banken</h1>
+        <button>
+          <Link href='/auth/signup'>Skapa användare</Link>
+        </button>
+      </section>
+    </div>
+  )
+}
+
+export default LandingPage
+```
+
+#### pages
+
+login.js
+
+```js
+'use client'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+
+export default function Login({ params }) {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [otp, setOtp] = useState('')
+  const router = useRouter()
+
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/sessions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      })
+      if (response.ok) {
+        const data = await response.json()
+        setOtp(data.otp)
+        router.push('/me/accounts')
+      } else {
+        // Handle error
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
+
+  return (
+    <div>
+      <h2>Logga in</h2>
+      <input
+        type='text'
+        placeholder='Användarnamn'
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <input
+        type='password'
+        placeholder='Lösenord'
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button onClick={handleLogin}>Logga in</button>
+    </div>
+  )
+}
+```
+
+signup\page.js
+
+```js
+'use client'
+import { useState } from 'react'
+import { handleSignup } from '@/utils/actions'
+import { useRouter } from 'next/navigation'
+export default function SignupPage({ params }) {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const router = useRouter()
+  return (
+    <div>
+      <h2>Skapa användare</h2>
+      <input
+        type='text'
+        placeholder='Användarnamn'
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <input
+        type='password'
+        placeholder='Lösenord'
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button onClick={handleSignup}>Skapa användare</button>
+    </div>
+  )
+}
+```
+
+accounts\page
+
+```js
+'use client'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+
+function Accounts({ params }) {
+  const [otp, setOtp] = useState('')
+  const [balance, setBalance] = useState(0)
+  const router = useRouter()
+
+  const handleGetBalance = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/me/accounts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: 'username', otp }),
+      })
+      if (response.ok) {
+        // Hantera saldo data
+      } else {
+        // Handle error
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
+
+  return (
+    <div>
+      <h2>Kontosida</h2>
+      <button onClick={handleGetBalance}>Visa saldo</button>
+      <p>Saldo: {balance}</p>
+    </div>
+  )
+}
+
+export default Accounts
+```
+
+### ordentlig navigering
+
+```sh
+npm install next-themes@^0.2.1
+npx shadcn-ui@latest init
+```
