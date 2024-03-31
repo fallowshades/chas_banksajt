@@ -18,6 +18,8 @@ function Accounts({ params }) {
       })
       if (response.ok) {
         // Hantera saldo data
+        const data = await response.json() // Parse response body as JSON
+        setBalance(data.balance) // Update balance state with received balance
       } else {
         // Handle error
       }
@@ -40,6 +42,8 @@ function Accounts({ params }) {
       )
       if (response.ok) {
         // Reload balance or update UI
+        const data = await response.json() // Parse response body as JSON
+        setBalance(data.balance) // Update balance state with received balance
       } else {
         // Handle error
       }

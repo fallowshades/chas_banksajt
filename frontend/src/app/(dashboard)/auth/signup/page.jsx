@@ -2,8 +2,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 export default function SignupPage({ params }) {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('abc')
+  const [password, setPassword] = useState('abc')
   const router = useRouter()
 
   const handleSignup = async () => {

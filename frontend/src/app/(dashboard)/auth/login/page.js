@@ -3,8 +3,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function Login({ params }) {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('abc')
+  const [password, setPassword] = useState('abc')
   const [otp, setOtp] = useState('')
   const router = useRouter()
 

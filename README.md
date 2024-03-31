@@ -820,3 +820,61 @@ app.post('/me/accounts/transactions'), (req, res) => {
        res.status(200).send(nyttsaldo)
 }
 ```
+
+#### nodemon discover need global state (sad life)
+
+login and signup
+
+```js
+const [username, setUsername] = useState('abc')
+const [password, setPassword] = useState('abc')
+```
+
+accounts\page.js
+
+- we want the page to reload thats why we need useState, but we need better state managment for dependent input variables such as user object
+
+```js
+function Accounts({ params }) {
+
+   const handleGetBalance = async () => {
+      ...
+       const data = await response.json() // Parse response body as JSON
+        setBalance(data.balance) // Update balance state with received balance
+   }
+
+    const handleDeposit = async () => {
+        ...
+         const data = await response.json() // Parse response body as JSON
+        setBalance(data.balance) // Update balance state with received balance
+    }
+}
+```
+
+server.js
+
+```js
+app.post('/users', (req, res) => {
+   console.log(users)
+}
+
+app.post('/sessions', (req, res) => {
+   console.log(sessions)
+
+}
+
+app.post('/me/accounts', (req, res) => {
+  const saldo = accounts[session].balance
+    console.log(saldo)
+}
+
+app.post('/me/accounts/transactions', (req, res) => {
+
+    // Din kod för att hantera transaktioner här
+  accounts[session].balance += amount
+
+  // Send the updated balance back to the client
+  const newBalance = accounts[accountIndex].balance
+  console.log(saldo)
+}
+```
