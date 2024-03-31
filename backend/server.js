@@ -53,21 +53,24 @@ app.post('/me/accounts', (req, res) => {
   }
 
   // Din kod för att visa saldo här
+  const saldo = accounts[session].balance
 
-  res.status(200).send('Visa saldo')
+  res.status(200).send(saldo)
 })
 
+const allUserMoneyIsSharedHowNice = 0
 // Sätt in pengar
 app.post('/me/accounts/transactions', (req, res) => {
-  const { username, otp } = req.body
+  const { username, otp, amount } = req.body
   const session = sessions.find((s) => s.username === username && s.otp === otp)
   if (!session) {
     return res.status(401).send('Ogiltig session')
   }
 
   // Din kod för att hantera transaktioner här
+  const nyttsaldo = (accounts[session].balance += amount) || 0
 
-  res.status(200).send('Transaktion utförd')
+  res.status(200).send(nyttsaldo)
 })
 
 // Starta servern

@@ -694,7 +694,7 @@ export default Sidebar
 
 ## login is fun with chatgtp
 
-###
+### this
 
 \login\page.js
 
@@ -727,5 +727,96 @@ const handleSignup = async () => {
     console.error('Signup failed:', error)
     // Handle error, such as displaying an error message to the user
   }
+}
+```
+
+## account request response cycles
+
+### happy objects
+
+#### create extra parameter and provide info to identify object
+
+accounts\page.js
+
+```js
+import { Button } from '@/components/ui/button'
+function Accounts({ params }) {
+  ...
+
+  const [amount, setAmount] = useState(0)
+
+  const handleDeposit = async () => {
+    try {
+      const response = await fetch(
+        'http://localhost:3001/me/accounts/transactions',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username: 'username', otp, amount }),
+        }
+      )
+      if (response.ok) {
+        // Reload balance or update UI
+      } else {
+        // Handle error
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
+
+return (
+  <div>
+    <div>
+      <h2>Kontosida</h2>
+      <Button onClick={handleGetBalance}>Visa saldo</Button>
+      <p>Saldo: {balance}</p>
+    </div>
+    <div>
+      <h2>Kontosida</h2>
+      <label>
+        Engångslösenord:
+        <input
+          type='password'
+          value={otp}
+          onChange={(e) => setOtp(e.target.value)}
+        />
+      </label>
+      <label>
+        Belopp att sätta in:
+        <input
+          type='number'
+          value={amount}
+          onChange={(e) => setAmount(parseFloat(e.target.value))}
+        />
+      </label>
+      <Button onClick={handleDeposit}>Sätt in pengar</Button>
+    </div>
+  </div>
+)
+}
+```
+
+server.js
+
+- yeah this is what we call math. yuck! i am truly disgusted
+
+```js
+// Visa saldo
+app.post('/me/accounts', (req, res) => {
+  ...
+
+  const saldo = accounts[session].balance
+
+  res.status(200).send(saldo)
+})
+
+app.post('/me/accounts/transactions'), (req, res) => {
+
+    const { username, otp, amount } = req.body
+     const nyttsaldo = (accounts[session].balance += amount) || 0
+       res.status(200).send(nyttsaldo)
 }
 ```

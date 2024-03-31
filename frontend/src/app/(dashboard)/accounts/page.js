@@ -1,12 +1,12 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-
+import { Button } from '@/components/ui/button'
 function Accounts({ params }) {
   const [otp, setOtp] = useState('')
   const [balance, setBalance] = useState(0)
   const router = useRouter()
-
+  const [amount, setAmount] = useState(0)
   const handleGetBalance = async () => {
     try {
       const response = await fetch('http://localhost:3001/me/accounts', {
@@ -26,11 +26,55 @@ function Accounts({ params }) {
     }
   }
 
+  const handleDeposit = async () => {
+    try {
+      const response = await fetch(
+        'http://localhost:3001/me/accounts/transactions',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username: 'username', otp, amount }),
+        }
+      )
+      if (response.ok) {
+        // Reload balance or update UI
+      } else {
+        // Handle error
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
+
   return (
     <div>
-      <h2>Kontosida</h2>
-      <button onClick={handleGetBalance}>Visa saldo</button>
-      <p>Saldo: {balance}</p>
+      <div>
+        <h2>Kontosida</h2>
+        <Button onClick={handleGetBalance}>Visa saldo</Button>
+        <p>Saldo: {balance}</p>
+      </div>
+      <div>
+        <h2>Kontosida</h2>
+        <label>
+          Engångslösenord:
+          <input
+            type='password'
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+          />
+        </label>
+        <label>
+          Belopp att sätta in:
+          <input
+            type='number'
+            value={amount}
+            onChange={(e) => setAmount(parseFloat(e.target.value))}
+          />
+        </label>
+        <Button onClick={handleDeposit}>Sätt in pengar</Button>
+      </div>
     </div>
   )
 }
