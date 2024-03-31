@@ -2,7 +2,7 @@
 
 I dagens uppgift ska vi öva på att skapa en react-sajt med backend i express och publicera den på en ec2 instans i aws med scp.
 
-### Data i backend
+## Data i backend
 
 I bankens backend finns tre arrayer: En array `users` för användare, en array `accounts` för bankkonton och en array `sessions` för engångslösenord`.
 
@@ -180,3 +180,102 @@ Efter denna uppgift ska ni kunna skapa en fullstack sajt med api och publicera p
 Klar? Här är lite mer att göra:
 
 1. Installera pm2 på backend och se till att frontend och backend körs även när terminalen stängs.
+
+## skapa backend identifiera objekt i array
+
+```sh
+npm init
+```
+
+skapa .git inore i backend mapped och ignorera node modules
+
+server.js
+
+- port 3001 eftersom jag använder port 3000 för frontend
+
+```js
+import express from 'express'
+import bodyParser from 'body-parser'
+import cors from 'cors'
+
+const app = express()
+const port = 3001
+
+// Middleware
+app.use(cors())
+app.use(bodyParser.json())
+
+// Tomma arrayer för användare, konton och sessioner
+let users = []
+let accounts = []
+let sessions = []
+...
+
+// Starta servern
+app.listen(port, () => {
+  console.log(`Bankens backend körs på http://localhost:${port}`)
+})
+
+```
+
+- array metoder
+  - identifiera via matchning
+  - beroende av user matchning skapa object i array
+  - sök objekt som beror på användare och session
+
+```js
+// Generera engångslösenord
+function generateOTP() {
+  // Generera en sexsiffrig numerisk OTP
+  const otp = Math.floor(100000 + Math.random() * 900000)
+  return otp.toString()
+}
+
+// Skapa användare
+app.post('/users', (req, res) => {
+  const { username, password } = req.body
+  const user = { username, password }
+  users.push(user)
+  res.status(201).send('Användare skapad')
+})
+```
+
+```js
+// Logga in och skicka engångslösenord
+app.post('/sessions', (req, res) => {
+  const { username, password } = req.body
+  const user = users.find(
+    (u) => u.username === username && u.password === password
+  )
+  if (!user) {
+    return res.status(401).send('Fel användarnamn eller lösenord')
+  }
+
+  const otp = generateOTP()
+  sessions.push({ username, otp })
+  res.status(200).json({ otp })
+})
+```
+
+```js
+// Visa saldo
+app.post('/me/accounts', (req, res) => {
+  const { username, otp } = req.body
+  const session = sessions.find((s) => s.username === username && s.otp === otp)
+  if (!session) {
+    return res.status(401).send('Ogiltig session')
+  }
+
+  // Din kod för att visa saldo här
+
+  res.status(200).send('Visa saldo')
+})
+
+// Sätt in pengar
+app.post('/me/accounts/transactions', (req, res) => {
+  const { username, otp } = req.body
+  const session = sessions.find((s) => s.username === username && s.otp === otp)
+  if (!session) {
+    return res.status(401).send('Ogiltig session')
+  }
+```
