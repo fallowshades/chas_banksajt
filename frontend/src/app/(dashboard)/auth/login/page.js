@@ -20,7 +20,7 @@ export default function Login({ params }) {
       if (response.ok) {
         const data = await response.json()
         setOtp(data.otp)
-        router.push('/me/accounts')
+        router.push('/accounts')
       } else {
         // Handle error
       }
