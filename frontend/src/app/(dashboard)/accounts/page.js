@@ -20,8 +20,9 @@ function Accounts({ params }) {
         // Hantera saldo data
         const data = await response.json() // Parse response body as JSON
         setBalance(data.balance) // Update balance state with received balance
-      } else {
-        // Handle error
+      }
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
       }
     } catch (error) {
       console.error('Error:', error)
@@ -44,8 +45,9 @@ function Accounts({ params }) {
         // Reload balance or update UI
         const data = await response.json() // Parse response body as JSON
         setBalance(data.balance) // Update balance state with received balance
-      } else {
-        // Handle error
+      }
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
       }
     } catch (error) {
       console.error('Error:', error)
@@ -62,9 +64,9 @@ function Accounts({ params }) {
       <div>
         <h2>Kontosida</h2>
         <label>
-          Engångslösenord:
+          otp.ie Token:
           <input
-            type='otp'
+            type='text'
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
           />

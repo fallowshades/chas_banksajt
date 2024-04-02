@@ -974,8 +974,53 @@ app.post('/me/accounts/transactions', (req, res) => {
 })
 ```
 
-#### Fix
+#### Fix transaction inputs
+
+server.js
+
+- only search for otp
 
 ```js
+app.post('/me/accounts', (req, res) => {
+  console.log(`users: ${JSON.stringify(users)}`)
+  console.log(`accounts: ${JSON.stringify(accounts)}`)
+  console.log(`sessions: ${JSON.stringify(sessions)}`)
 
+  console.log('otp:', otp)
+  console.log(`sessions: ${sessions} x $`)
+  const session = sessions.find((s) => s.token === otp)
+})
+
+app.post('/me/accounts/transactions', (req, res) => {
+  console.log(`users: ${JSON.stringify(users)}`)
+  console.log(`accounts: ${JSON.stringify(accounts)}`)
+  console.log(`sessions: ${JSON.stringify(sessions)}`)
+})
+```
+
+acounts/page.js
+
+- error aswell
+
+```js
+const handleGetBalance = async () => {
+  if (!response.ok) {
+    throw new Error('Network response was not ok')
+  }
+}
+const handleDeposit = async () => {
+  if (!response.ok) {
+    throw new Error('Network response was not ok')
+  }
+}
+return (
+  <div>
+    ...
+    <label>
+      otp.ie Token:
+      <input type='text' value={otp} onChange={(e) => setOtp(e.target.value)} />
+    </label>
+    ...
+  </div>
+)
 ```

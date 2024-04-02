@@ -66,11 +66,14 @@ app.post('/sessions', (req, res) => {
 
 // Visa saldo
 app.post('/me/accounts', (req, res) => {
-  const { username, otp } = req.body
+  console.log(`users: ${JSON.stringify(users)}`)
+  console.log(`accounts: ${JSON.stringify(accounts)}`)
+  console.log(`sessions: ${JSON.stringify(sessions)}`)
+  const { otp } = req.body
   console.log(otp)
-  console.log('username:', username, 'otp:', otp)
-  console.log(`sessions: ${sessions[0]}`)
-  const session = sessions.find((s) => s.userId === username && s.token === otp)
+  console.log('otp:', otp)
+  console.log(`sessions: ${sessions} x $`)
+  const session = sessions.find((s) => s.token === otp)
   if (!session) {
     console.log('err session in accounts')
     return res.status(401).send('Ogiltig session')
@@ -87,21 +90,25 @@ app.post('/me/accounts', (req, res) => {
     saldo = account.balance
   }
   console.log(saldo)
-  res.status(200).send(saldo)
+  res.status(200).json({ saldo: saldo })
 })
 
 // Sätt in pengar
 app.post('/me/accounts/transactions', (req, res) => {
-  const { username, otp, amount } = req.body
+  console.log(`users: ${JSON.stringify(users)}`)
+  console.log(`accounts: ${JSON.stringify(accounts)}`)
+  console.log(`sessions: ${JSON.stringify(sessions)}`)
+  const { otp, amount } = req.body
+  console.log(req.body)
   console.log('in transaction otp=', otp)
-  console.log(sessions[0])
+  console.log(JSON.stringify(sessions[0]))
   //const session = sessions.find((s) => s.username === username && s.otp === otp)
   const session = sessions.find((s) => s.token === otp)
   if (!session) {
     console.log('err no session in transaction')
     return res.status(401).send('Ogiltig session')
   }
-  console.log(session)
+  console.log(JSON.stringify(sessions))
 
   const account = accounts.find((s) => s.userId === session.userId)
   if (!account) {
