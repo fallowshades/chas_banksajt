@@ -14,7 +14,7 @@ function Accounts({ params }) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username: 'username', otp }),
+        body: JSON.stringify({ username: 'abc', otp }),
       })
       if (response.ok) {
         // Hantera saldo data
@@ -37,7 +37,7 @@ function Accounts({ params }) {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ username: 'username', otp, amount }),
+          body: JSON.stringify({ username: 'abc', otp, amount }),
         }
       )
       if (response.ok) {
@@ -64,7 +64,7 @@ function Accounts({ params }) {
         <label>
           Engångslösenord:
           <input
-            type='password'
+            type='otp'
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
           />

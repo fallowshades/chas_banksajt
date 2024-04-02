@@ -10,9 +10,21 @@ app.use(cors())
 app.use(bodyParser.json())
 
 // Tomma arrayer för användare, konton och sessioner
+let userIds = 1
 let users = []
 let accounts = []
 let sessions = []
+
+//visa saldo:
+
+//1. skicka token
+//2. token ger userId från sessions
+//3. userId get salodo från accounts
+
+// sätta in pengar
+// 1. skicka token och antal kronor
+// 2. token ger userId från sessions
+// 3. updatera accouts med nytt saldo
 
 // Generera engångslösenord
 function generateOTP() {
@@ -24,9 +36,12 @@ function generateOTP() {
 // Skapa användare
 app.post('/users', (req, res) => {
   const { username, password } = req.body
-  const user = { username, password }
+  const user = { id: userIds++, username, password }
   users.push(user)
   console.log(users)
+  const account = { id: accounts.length + 1, userId: user.id, balance: 0 }
+  accounts.push(account)
+  console.log(account)
   res.status(201).send('Användare skapad')
 })
 
@@ -37,26 +52,40 @@ app.post('/sessions', (req, res) => {
     (u) => u.username === username && u.password === password
   )
   if (!user) {
+    console.log('error')
     return res.status(401).send('Fel användarnamn eller lösenord')
   }
 
   const otp = generateOTP()
-  sessions.push({ username, otp })
-  console.log(sessions)
+  const session = { userId: user.id, token: otp }
+  sessions.push(session)
+  console.log(`sessions ${session}`)
+  console.log(`otp ${otp}`)
   res.status(200).json({ otp })
 })
 
 // Visa saldo
 app.post('/me/accounts', (req, res) => {
   const { username, otp } = req.body
-  console.log('username', username, 'otp', otp)
-  const session = sessions.find((s) => s.username === username && s.otp === otp)
+  console.log(otp)
+  console.log('username:', username, 'otp:', otp)
+  console.log(`sessions: ${sessions[0]}`)
+  const session = sessions.find((s) => s.userId === username && s.token === otp)
   if (!session) {
+    console.log('err session in accounts')
     return res.status(401).send('Ogiltig session')
   }
-
+  console.log(session)
+  const account = accounts.find((s) => s.userId === session.userId)
+  if (!account) {
+    console.log('err account in accounts')
+    return res.status(401).send('Ogiltig session')
+  }
   // Din kod för att visa saldo här
-  const saldo = accounts[session].balance
+  let saldo = 0
+  if (account.balance) {
+    saldo = account.balance
+  }
   console.log(saldo)
   res.status(200).send(saldo)
 })
@@ -64,17 +93,28 @@ app.post('/me/accounts', (req, res) => {
 // Sätt in pengar
 app.post('/me/accounts/transactions', (req, res) => {
   const { username, otp, amount } = req.body
-  console.log(users)
-  const session = sessions.find((s) => s.username === username && s.otp === otp)
+  console.log('in transaction otp=', otp)
+  console.log(sessions[0])
+  //const session = sessions.find((s) => s.username === username && s.otp === otp)
+  const session = sessions.find((s) => s.token === otp)
   if (!session) {
+    console.log('err no session in transaction')
     return res.status(401).send('Ogiltig session')
   }
+  console.log(session)
 
+  const account = accounts.find((s) => s.userId === session.userId)
+  if (!account) {
+    console.log('err no account in transaction')
+    return res.status(401).send('Ogiltig session')
+  }
   // Din kod för att hantera transaktioner här
-  accounts[session].balance += amount
+  account.balance += amount
 
+  console.log(`account: ${account}`)
   // Send the updated balance back to the client
-  const newBalance = accounts[accountIndex].balance
+  const newBalance = account.balance
+  console.log(`newBalance ${newBalance}`)
   res.status(200).json({ balance: newBalance })
 })
 

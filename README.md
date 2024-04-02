@@ -878,3 +878,104 @@ app.post('/me/accounts/transactions', (req, res) => {
   console.log(saldo)
 }
 ```
+
+### sad developer realize life is what it is. we need context
+
+#### setup
+
+```js
+
+```
+
+## but first the server
+
+### server user account relationship
+
+#### close to correct
+
+server.js
+
+```js
+let userIds = 1
+...
+//visa saldo:
+
+//1. skicka token
+//2. token ger userId från sessions
+//3. userId get salodo från accounts
+
+// sätta in pengar
+// 1. skicka token och antal kronor
+// 2. token ger userId från sessions
+// 3. updatera accouts med nytt saldo
+
+app.post('/users', (req, res) => {
+    const user = { id: userIds++, username, password }
+    ...
+      const account = { id: accounts.length + 1, userId: user.id, balance: 0 }
+  accounts.push(account)
+  console.log(account)
+})
+
+```
+
+```js
+app.post('/sessions', (req, res) => {
+    ...
+      const session = { userId: user.id, token: otp }
+  sessions.push(session)
+  console.log(`sessions ${session}`)
+  console.log(`otp ${otp}`)
+})
+```
+
+```js
+app.post('/me/accounts', (req, res) => {
+      console.log(otp)
+  console.log('username:', username, 'otp:', otp)
+  console.log(`sessions: ${sessions[0]}`)
+  const session = sessions.find((s) => s.userId === username && s.token === otp)
+  if (!session) {
+    console.log('err session in accounts')
+    return res.status(401).send('Ogiltig session')
+  }
+  console.log(session)
+  const account = accounts.find((s) => s.userId === session.userId)
+  if (!account) {
+    console.log('err account in accounts')
+
+      let saldo = 0
+  if (account.balance) {
+    saldo = account.balance
+  }
+})
+```
+
+```js
+app.post('/me/accounts/transactions', (req, res) => {
+  console.log('in transaction otp=', otp)
+  console.log(sessions[0])
+  //const session = sessions.find((s) => s.username === username && s.otp === otp)
+  const session = sessions.find((s) => s.token === otp)
+
+  console.log(session)
+
+  const account = accounts.find((s) => s.userId === session.userId)
+  if (!account) {
+    console.log('err no account in transaction')
+    return res.status(401).send('Ogiltig session')
+  }
+  account.balance += amount
+
+  console.log(`account: ${account}`)
+  // Send the updated balance back to the client
+  const newBalance = account.balance
+  console.log(`newBalance ${newBalance}`)
+})
+```
+
+#### Fix
+
+```js
+
+```
